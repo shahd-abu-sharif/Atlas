@@ -5,10 +5,10 @@
 - **Team Name: **NEXUS**
 - **Team Leader:** [Shahd Abu Sharif](https://github.com/shahd-abu-sharif)
 - **Team Members:**
-  - [Deema Abd Alhady](https://github.com/Lubna-Jaradat) UX/UI Designer
+  - [Deema Abd Alhady](https://github.com/Deemaabdalhady) UX/UI Designer
   - [Afnan Kullab](https://github.com/afnankullab-dev) FrontEnd Developer
   - [Shahd Abu Sharif](https://github.com/shahd-abu-sharif) BackEnd Developer
-  - [Maryam Thabet](https://github.com/shahd-abu-sharif) QA Engineer
+  - [Maryam Thabet](https://github.com/Mariam-Adnan-5) QA Engineer
   - [Shahd Al Mobayed](https://github.com/shahedeyadalmobayed2004) Mobile Developer
   - [Marah Abu Abdo](https://github.com/MarahAboAbdo) AI Engineer
  
