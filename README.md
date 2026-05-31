@@ -1,5 +1,20 @@
 # ATLAS
 
+## Team Informatin 
+
+- **Team Name: **NEXUS**
+- **Team Leader:** [Shahd Abu Sharif](https://github.com/shahd-abu-sharif)
+- **Team Members:**
+  - [Deema Abd Alhady](https://github.com/Lubna-Jaradat) UX/UI Designer
+  - [Afnan Kullab](https://github.com/afnankullab-dev) FrontEnd Developer
+  - [Shahd Abu Sharif](https://github.com/shahd-abu-sharif) BackEnd Developer
+  - [Maryam Thabet](https://github.com/shahd-abu-sharif) QA Engineer
+  - [Shahd Al Mobayed](https://github.com/shahedeyadalmobayed2004) Mobile Developer
+  - [Marah Abu Abdo](https://github.com/MarahAboAbdo) AI Engineer
+ 
+
+---
+
 ## Project Overview
 
 ATLAS is a **Field Training Management System** that connects universities, students, and companies within a unified platform to manage internship and field training programs in a structured and controlled manner.
