@@ -2,7 +2,7 @@
 
 ## Team Informatin 
 
-- **Team Name: **NEXUS**
+- **Team Name**: **NEXUS**
 - **Team Leader:** [Shahd Abu Sharif](https://github.com/shahd-abu-sharif)
 - **Team Members:**
   - [Deema Abd Alhady](https://github.com/Deemaabdalhady) UX/UI Designer
