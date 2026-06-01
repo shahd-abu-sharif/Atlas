@@ -1,4 +1,4 @@
-# ATLAS
+# Tadreeby
 
 ## Team Informatin 
 
@@ -17,11 +17,11 @@
 
 ## Project Overview
 
-ATLAS is a **Field Training Management System** that connects universities, students, and companies within a unified platform to manage internship and field training programs in a structured and controlled manner.
+Tadreeby is a **Field Training Management System** that connects universities, students, and companies within a unified platform to manage internship and field training programs in a structured and controlled manner.
 
 The system enables students to apply for internships, allows universities to supervise academic progress, and gives companies the ability to host, manage, and evaluate trainees throughout the training lifecycle.
 
-ATLAS is designed as a **role-based backend system** with strong emphasis on business rules, data consistency, and clear workflow management between all involved parties.
+Tadreeby is designed as a **role-based backend system** with strong emphasis on business rules, data consistency, and clear workflow management between all involved parties.
 
 ---
 
@@ -41,7 +41,7 @@ There is no unified system that coordinates the full internship lifecycle betwee
 
 ## Solution Overview
 
-ATLAS provides a centralized backend system that standardizes the entire internship process through a structured workflow.
+Tadreeby provides a centralized backend system that standardizes the entire internship process through a structured workflow.
 
 It enables:
 
@@ -70,7 +70,7 @@ The system ensures consistency, traceability, and enforceable business rules acr
 
 ## System Design
 
-ATLAS is built as a **modular backend system**, focusing on:
+Tadreeby is built as a **modular backend system**, focusing on:
 
 - Clear separation of responsibilities between modules
 - Strong enforcement of business rules
