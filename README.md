@@ -92,7 +92,7 @@ Tadreeby is built as a **modular backend system**, focusing on:
 
 ---
 
-## Tech Stack (optional section)
+## Tech Stack for Backend
 
 - NestJS (Backend Framework)
 - PostgreSQL (Database)
