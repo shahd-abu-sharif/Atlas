@@ -93,8 +93,8 @@ model User {
   trainerInternships    Internship[]   @relation("TrainerInternship")
   supervisorInternships Internship[]   @relation("SupervisorInternship")
 
-  university University? @relation(fields: [universityId], references: [id])
-  company    Company?    @relation(fields: [companyId], references: [id])
+  university University? @relation(fields: [universityId], references: [id], onDelete: SetNull)
+  company    Company?    @relation(fields: [companyId], references: [id] , onDelete: SetNull)
 }
 
 // ! University Module
@@ -149,8 +149,8 @@ model StudentProfile {
   evaluations     Evaluation[]
   taskSubmissions TaskSubmission[]
 
-  user       User        @relation(fields: [userId], references: [id])
-  university University? @relation(fields: [universityId], references: [id])
+  user       User        @relation(fields: [userId], references: [id] , onDelete: Cascade)
+  university University? @relation(fields: [universityId], references: [id] , onDelete: Cascade)
 }
 
 // ! University Supervisor Profile Model
@@ -160,8 +160,8 @@ model UniversitySupervisorProfile {
   universityId Int
   department   String?
 
-  user       User        @relation(fields: [userId], references: [id])
-  university University? @relation(fields: [universityId], references: [id])
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  university University? @relation(fields: [universityId], references: [id], onDelete: Cascade)
 }
 
 // ! Company Trainer Profile Model
@@ -172,8 +172,8 @@ model CompanyTrainerProfile {
   position       String?
   specialization String?
 
-  company Company? @relation(fields: [companyId], references: [id])
-  user    User     @relation(fields: [userId], references: [id])
+  company Company? @relation(fields: [companyId], references: [id] , onDelete: Cascade)
+  user    User     @relation(fields: [userId], references: [id] , onDelete: Cascade)
 }
 
 // ! Training Opportunity Model
@@ -194,7 +194,7 @@ model TrainingOpportunity {
   // internship  Internship? @relation("OppToInternship")
   internships Internship[]
 
-  company Company @relation(fields: [companyId], references: [id])
+  company Company @relation(fields: [companyId], references: [id] , onDelete: Cascade)
 }
 
 // ! Internship Model
@@ -213,11 +213,11 @@ model Internship {
   evaluations Evaluation[]
   tasks       Task[]
 
-  company     Company             @relation(fields: [companyId], references: [id])
-  university  University          @relation(fields: [universityId], references: [id])
-  opportunity TrainingOpportunity @relation(fields: [opportunityId], references: [id])
-  trainer     User?               @relation("TrainerInternship", fields: [trainerId], references: [id])
-  supervisor  User?               @relation("SupervisorInternship", fields: [supervisorId], references: [id])
+  company     Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  university  University          @relation(fields: [universityId], references: [id] , onDelete: Cascade)
+  opportunity TrainingOpportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  trainer     User?               @relation("TrainerInternship", fields: [trainerId], references: [id], onDelete: SetNull)
+  supervisor  User?               @relation("SupervisorInternship", fields: [supervisorId], references: [id] , onDelete: SetNull)
   // opportunityId String @unique
   // opportunity   TrainingOpportunity @relation("OppToInternship", fields: [opportunityId], references: [id])
 }
@@ -229,8 +229,8 @@ model InternshipStudent {
   internshipId Int
   studentId    Int
 
-  internship Internship     @relation(fields: [internshipId], references: [id])
-  student    StudentProfile @relation(fields: [studentId], references: [userId])
+  internship Internship     @relation(fields: [internshipId], references: [id], onDelete: Cascade)
+  student    StudentProfile @relation(fields: [studentId], references: [userId], onDelete: Cascade)
 
   @@unique([internshipId, studentId])
 }
@@ -246,7 +246,7 @@ model Task {
   status       TaskStatus @default(TODO)
 
   submissions TaskSubmission[]
-  internship  Internship       @relation(fields: [internshipId], references: [id])
+  internship  Internship       @relation(fields: [internshipId], references: [id] , onDelete: Cascade)
 }
 
 // ! Task Submission Model
@@ -262,8 +262,8 @@ model TaskSubmission {
 
   aiEvaluations AIEvaluation[]
 
-  student StudentProfile @relation(fields: [studentId], references: [userId])
-  task    Task           @relation(fields: [taskId], references: [id])
+  student StudentProfile @relation(fields: [studentId], references: [userId], onDelete: Cascade)
+  task    Task           @relation(fields: [taskId], references: [id], onDelete: Cascade)
 }
 
 // ! Attendance Model
@@ -275,8 +275,8 @@ model Attendance {
   date         DateTime
   status       AttendanceStatus
 
-  internship Internship     @relation(fields: [internshipId], references: [id])
-  student    StudentProfile @relation(fields: [studentId], references: [userId])
+  internship Internship     @relation(fields: [internshipId], references: [id], onDelete: Cascade)
+  student    StudentProfile @relation(fields: [studentId], references: [userId], onDelete: Cascade)
 }
 
 // ! Evaluation Model
@@ -291,9 +291,9 @@ model Evaluation {
   feedback     String?
   createdAt    DateTime       @default(now())
 
-  evaluator  User           @relation("UserEvaluations", fields: [evaluatorId], references: [id])
-  internship Internship     @relation(fields: [internshipId], references: [id])
-  student    StudentProfile @relation(fields: [studentId], references: [userId])
+  evaluator  User           @relation("UserEvaluations", fields: [evaluatorId], references: [id], onDelete: Cascade)
+  internship Internship     @relation(fields: [internshipId], references: [id], onDelete: Cascade)
+  student    StudentProfile @relation(fields: [studentId], references: [userId], onDelete: Cascade)
 }
 
 // ! AI Evaluation Model
@@ -306,7 +306,7 @@ model AIEvaluation {
   recommendations  String?
   createdAt        DateTime @default(now())
 
-  taskSubmission TaskSubmission @relation(fields: [taskSubmissionId], references: [id])
+  taskSubmission TaskSubmission @relation(fields: [taskSubmissionId], references: [id], onDelete: Cascade)
 }
 
 // ! Message Model
@@ -318,8 +318,8 @@ model Message {
   content    String
   createdAt  DateTime @default(now())
 
-  sender   User @relation("sent", fields: [senderId], references: [id])
-  receiver User @relation("recv", fields: [receiverId], references: [id])
+  sender   User @relation("sent", fields: [senderId], references: [id] , onDelete: Cascade)
+  receiver User @relation("recv", fields: [receiverId], references: [id] , onDelete: Cascade)
 }
 
 // ! Notification Model
@@ -333,5 +333,5 @@ model Notification {
   createdAt DateTime         @default(now())
   type      NotificationType
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id] , onDelete: Cascade)
 }
