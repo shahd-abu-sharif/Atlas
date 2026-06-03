@@ -70,15 +70,15 @@ enum NotificationType {
 // ! User Model
 
 model User {
-  id                String                       @id @default(uuid())
+  id                Int                          @id @default(autoincrement())
   email             String                       @unique
   password          String
   fullName          String
   phone             String?
   profileImage      String?
   role              UserRole
-  universityId      String?
-  companyId         String?
+  universityId      Int?
+  companyId         Int?
   isActive          Boolean                      @default(true)
   studentProfile    StudentProfile?
   trainerProfile    CompanyTrainerProfile?
@@ -97,7 +97,7 @@ model User {
 // ! University Module
 
 model University {
-  id          String  @id @default(uuid())
+  id          Int     @id @default(autoincrement())
   name        String
   email       String?
   phone       String?
@@ -113,7 +113,7 @@ model University {
 // ! Company Model
 
 model Company {
-  id          String  @id @default(uuid())
+  id          Int     @id @default(autoincrement())
   name        String
   email       String?
   phone       String?
@@ -129,8 +129,8 @@ model Company {
 // ! Student Profile Model
 
 model StudentProfile {
-  userId               String    @id
-  universityId         String?
+  userId               Int       @id
+  universityId         Int?
   major                String?
   academicYear         Int?
   gpa                  Float?
@@ -151,8 +151,8 @@ model StudentProfile {
 // ! University Supervisor Profile Model
 
 model UniversitySupervisorProfile {
-  userId       String  @id
-  universityId String?
+  userId       Int     @id
+  universityId Int?
   department   String?
 
   user       User        @relation(fields: [userId], references: [id])
@@ -162,8 +162,8 @@ model UniversitySupervisorProfile {
 // ! Company Trainer Profile Model
 
 model CompanyTrainerProfile {
-  userId         String  @id
-  companyId      String?
+  userId         Int     @id
+  companyId      Int?
   position       String?
   specialization String?
 
@@ -174,7 +174,8 @@ model CompanyTrainerProfile {
 // ! Training Opportunity Model
 
 model TrainingOpportunity {
-  id             String       @id @default(uuid())
+  id             Int          @id @default(autoincrement())
+  companyId      Int
   title          String
   description    String
   requiredSkills String?
@@ -185,22 +186,21 @@ model TrainingOpportunity {
   isActive       Boolean      @default(true)
   type           TrainingType @default(ONSITE)
 
-  companyId String
-  company   Company @relation(fields: [companyId], references: [id])
-
   // internship  Internship? @relation("OppToInternship")
   internships Internship[]
+
+  company Company @relation(fields: [companyId], references: [id])
 }
 
 // ! Internship Model
 
 model Internship {
-  id            String           @id @default(uuid())
-  opportunityId String
-  companyId     String
-  universityId  String
-  trainerId     String?
-  supervisorId  String?
+  id            Int              @id @default(autoincrement())
+  opportunityId Int
+  companyId     Int
+  universityId  Int
+  trainerId     Int?
+  supervisorId  Int?
   status        InternshipStatus @default(ACTIVE)
 
   students    InternshipStudent[]
@@ -220,9 +220,9 @@ model Internship {
 // ! Internship Student Model
 
 model InternshipStudent {
-  id           String @id @default(uuid())
-  internshipId String
-  studentId    String
+  id           Int @id @default(autoincrement())
+  internshipId Int
+  studentId    Int
 
   internship Internship     @relation(fields: [internshipId], references: [id])
   student    StudentProfile @relation(fields: [studentId], references: [userId])
@@ -231,8 +231,8 @@ model InternshipStudent {
 // ! Task Model
 
 model Task {
-  id           String     @id @default(uuid())
-  internshipId String
+  id           Int        @id @default(autoincrement())
+  internshipId Int
   title        String
   description  String?
   deadline     DateTime?
@@ -245,9 +245,9 @@ model Task {
 // ! Task Submission Model
 
 model TaskSubmission {
-  id          String   @id @default(uuid())
-  taskId      String
-  studentId   String
+  id          Int      @id @default(autoincrement())
+  taskId      Int
+  studentId   Int
   fileUrl     String?
   score       Float?
   feedback    String?
@@ -262,9 +262,9 @@ model TaskSubmission {
 // ! Attendance Model
 
 model Attendance {
-  id           String           @id @default(uuid())
-  internshipId String
-  studentId    String
+  id           Int              @id @default(autoincrement())
+  internshipId Int
+  studentId    Int
   date         DateTime
   status       AttendanceStatus
 
@@ -275,10 +275,10 @@ model Attendance {
 // ! Evaluation Model
 
 model Evaluation {
-  id           String         @id @default(uuid())
-  internshipId String
-  studentId    String
-  evaluatorId  String
+  id           Int            @id @default(autoincrement())
+  internshipId Int
+  studentId    Int
+  evaluatorId  Int
   type         EvaluationType
   score        Float?
   feedback     String?
@@ -292,8 +292,8 @@ model Evaluation {
 // ! AI Evaluation Model
 
 model AIEvaluation {
-  id               String   @id @default(uuid())
-  taskSubmissionId String
+  id               Int      @id @default(autoincrement())
+  taskSubmissionId Int
   score            Float?
   analysis         String?
   recommendations  String?
@@ -305,9 +305,9 @@ model AIEvaluation {
 // ! Message Model
 
 model Message {
-  id         String   @id @default(uuid())
-  senderId   String
-  receiverId String
+  id         Int      @id @default(autoincrement())
+  senderId   Int
+  receiverId Int
   content    String
   createdAt  DateTime @default(now())
 
@@ -318,10 +318,10 @@ model Message {
 // ! Notification Model
 
 model Notification {
-  id        String           @id @default(uuid())
-  userId    String
+  id        Int              @id @default(autoincrement())
+  userId    Int
   title     String
-  body      String
+  body      Int
   isRead    Boolean          @default(false)
   createdAt DateTime         @default(now())
   type      NotificationType
