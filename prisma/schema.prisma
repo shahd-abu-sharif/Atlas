@@ -92,6 +92,9 @@ model User {
   evaluations           Evaluation[]   @relation("UserEvaluations")
   trainerInternships    Internship[]   @relation("TrainerInternship")
   supervisorInternships Internship[]   @relation("SupervisorInternship")
+
+  university University? @relation(fields: [universityId], references: [id])
+  company    Company?    @relation(fields: [companyId], references: [id])
 }
 
 // ! University Module
@@ -105,6 +108,7 @@ model University {
   description String?
   isActive    Boolean @default(true)
 
+  users       User[]
   internships Internship[]
   students    StudentProfile[]
   supervisors UniversitySupervisorProfile[]
@@ -121,6 +125,7 @@ model Company {
   description String?
   isActive    Boolean @default(true)
 
+  users       User[]
   internships   Internship[]
   trainers      CompanyTrainerProfile[]
   opportunities TrainingOpportunity[]
@@ -152,7 +157,7 @@ model StudentProfile {
 
 model UniversitySupervisorProfile {
   userId       Int     @id
-  universityId Int?
+  universityId Int
   department   String?
 
   user       User        @relation(fields: [userId], references: [id])
@@ -163,7 +168,7 @@ model UniversitySupervisorProfile {
 
 model CompanyTrainerProfile {
   userId         Int     @id
-  companyId      Int?
+  companyId      Int
   position       String?
   specialization String?
 
@@ -226,6 +231,8 @@ model InternshipStudent {
 
   internship Internship     @relation(fields: [internshipId], references: [id])
   student    StudentProfile @relation(fields: [studentId], references: [userId])
+
+  @@unique([internshipId, studentId])
 }
 
 // ! Task Model
@@ -321,7 +328,7 @@ model Notification {
   id        Int              @id @default(autoincrement())
   userId    Int
   title     String
-  body      Int
+  body      String
   isRead    Boolean          @default(false)
   createdAt DateTime         @default(now())
   type      NotificationType
