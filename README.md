@@ -1,98 +1,107 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Tadreeby
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Team Informatin 
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+- **Team Name**: **NEXUS**
+- **Team Leader:** [Shahd Abu Sharif](https://github.com/shahd-abu-sharif)
+- **Team Members:**
+  - [Deema Abd Alhady](https://github.com/Deemaabdalhady) UX/UI Designer
+  - [Afnan Kullab](https://github.com/afnankullab-dev) FrontEnd Developer
+  - [Shahd Abu Sharif](https://github.com/shahd-abu-sharif) BackEnd Developer
+  - [Maryam Thabet](https://github.com/Mariam-Adnan-5) QA Engineer
+  - [Shahd Al Mobayed](https://github.com/shahedeyadalmobayed2004) Mobile Developer
+  - [Marah Abu Abdo](https://github.com/MarahAboAbdo) AI Engineer
+ 
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Project Overview
 
-## Project setup
+Tadreeby is a **Field Training Management System** that connects universities, students, and companies within a unified platform to manage internship and field training programs in a structured and controlled manner.
 
-```bash
-$ npm install
-```
+The system enables students to apply for internships, allows universities to supervise academic progress, and gives companies the ability to host, manage, and evaluate trainees throughout the training lifecycle.
 
-## Compile and run the project
+Tadreeby is designed as a **role-based backend system** with strong emphasis on business rules, data consistency, and clear workflow management between all involved parties.
 
-```bash
-# development
-$ npm run start
+---
 
-# watch mode
-$ npm run start:dev
+## Problem Statement
 
-# production mode
-$ npm run start:prod
-```
+Current internship and field training processes are fragmented and inefficient:
 
-## Run tests
+- Students struggle to find and apply for suitable internships
+- Universities lack real-time visibility over student progress in companies
+- Companies manage trainees using unstructured or manual processes
+- Communication between all parties is inconsistent and decentralized
+- Evaluation and reporting processes are often delayed or subjective
 
-```bash
-# unit tests
-$ npm run test
+There is no unified system that coordinates the full internship lifecycle between academic institutions and industry partners.
 
-# e2e tests
-$ npm run test:e2e
+---
 
-# test coverage
-$ npm run test:cov
-```
+## Solution Overview
 
-## Deployment
+Tadreeby provides a centralized backend system that standardizes the entire internship process through a structured workflow.
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+It enables:
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+- Centralized internship application and management
+- Role-based access for students, universities, and companies
+- Structured internship lifecycle from application to completion
+- Standardized reporting and evaluation mechanisms
+- Controlled coordination between academic and industry stakeholders
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+The system ensures consistency, traceability, and enforceable business rules across all operations.
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+## Key Features
 
-Check out a few resources that may come in handy when working with NestJS:
+- Role-based system (Student, University, Company, Admin)
+- Internship lifecycle management
+- Company internship postings and applications
+- Academic supervision and approvals
+- Training progress tracking
+- Evaluation and reporting system
+- Notification system for status updates and events
+- Centralized administration and governance
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+---
 
-## Support
+## System Design
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Tadreeby is built as a **modular backend system**, focusing on:
 
-## Stay in touch
+- Clear separation of responsibilities between modules
+- Strong enforcement of business rules
+- Reliable and consistent data handling
+- Structured workflow transitions
+- Scalable architecture for future expansion
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+---
 
-## License
+## Core Modules
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+- Student Management
+- University Management
+- Company Management
+- Internship Lifecycle Management
+- Evaluation System
+- Notification System
+- Administration & Governance
+
+---
+
+## Tech Stack for Backend
+
+- NestJS (Backend Framework)
+- PostgreSQL (Database)
+- Prisma (ORM)
+- Redis (Caching / Queueing)
+- Docker (Containerization)
+
+---
+
+## Status
+
+This project is currently under active development.
