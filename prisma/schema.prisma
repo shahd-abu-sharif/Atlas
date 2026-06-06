@@ -4,10 +4,352 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
+  // output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+// ! ENUMS
+
+enum UserRole {
+  SUPER_ADMIN
+  UNIVERSITY_ADMIN
+  COMPANY_ADMIN
+  UNIVERSITY_SUPERVISOR
+  COMPANY_TRAINER
+  STUDENT
+}
+
+enum ApplicationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+enum InternshipStatus {
+  ACTIVE
+  COMPLETED
+  CLOSED
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+enum TrainingType {
+  REMOTE
+  ONSITE
+  HYBRID
+}
+
+enum AttendanceStatus {
+  PRESENT //* arrivalTime ≤ startTime + gracePeriod
+  ABSENT //* no check-in OR arrivalTime > lateLimit
+  LATE //* startTime + gracePeriod < arrivalTime ≤ lateLimit
+}
+
+enum EvaluationType {
+  AI
+  TRAINER
+  SUPERVISOR
+}
+
+enum NotificationType {
+  TASK
+  ANNOUNCEMENT
+  APPLICATION
+  EVALUATION
+  SYSTEM
+}
+
+// ! User Model
+
+model User {
+  id                Int                          @id @default(autoincrement())
+  email             String                       @unique
+  password          String
+  fullName          String
+  phone             String?
+  profileImage      String?
+  role              UserRole
+  universityId      Int?
+  companyId         Int?
+  isActive          Boolean                      @default(true)
+  studentProfile    StudentProfile?
+  trainerProfile    CompanyTrainerProfile?
+  supervisorProfile UniversitySupervisorProfile?
+
+  createdAt DateTime @default(now())
+
+  notifications         Notification[]
+  sentMessages          Message[]      @relation("sent")
+  receivedMessages      Message[]      @relation("recv")
+  evaluations           Evaluation[]   @relation("UserEvaluations")
+  trainerInternships    Internship[]   @relation("TrainerInternship")
+  supervisorInternships Internship[]   @relation("SupervisorInternship")
+  refreshTokens         RefreshToken[]
+
+  university University? @relation(fields: [universityId], references: [id], onDelete: SetNull)
+  company    Company?    @relation(fields: [companyId], references: [id], onDelete: SetNull)
+}
+
+// ! Refresh Token Model
+model RefreshToken {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  token     String    @unique @db.VarChar(255)
+  expiresAt DateTime  @map("expires_at") @db.Timestamp()
+  revokedAt DateTime? @map("revoked_at") @db.Timestamp()
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  //! Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId], map: "idx_tokens_user")
+  @@map("refresh_tokens")
+}
+
+// ! University Model
+
+model University {
+  id          Int     @id @default(autoincrement())
+  name        String
+  email       String?
+  phone       String?
+  location    String?
+  description String?
+  isActive    Boolean @default(true)
+
+  users       User[]
+  internships Internship[]
+  students    StudentProfile[]
+  supervisors UniversitySupervisorProfile[]
+}
+
+// ! Company Model
+
+model Company {
+  id          Int     @id @default(autoincrement())
+  name        String
+  email       String?
+  phone       String?
+  location    String?
+  description String?
+  isActive    Boolean @default(true)
+
+  users         User[]
+  internships   Internship[]
+  trainers      CompanyTrainerProfile[]
+  opportunities TrainingOpportunity[]
+}
+
+// ! Student Profile Model
+
+model StudentProfile {
+  userId               Int       @id
+  universityId         Int?
+  major                String?
+  academicYear         Int?
+  gpa                  Float?
+  cvUrl                String?
+  verificationDocument String?
+  approvalStatus       String?
+  approvedAt           DateTime?
+
+  internships     InternshipStudent[]
+  attendance      Attendance[]
+  evaluations     Evaluation[]
+  taskSubmissions TaskSubmission[]
+
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  university University? @relation(fields: [universityId], references: [id], onDelete: Cascade)
+}
+
+// ! University Supervisor Profile Model
+
+model UniversitySupervisorProfile {
+  userId       Int     @id
+  universityId Int
+  department   String?
+
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  university University? @relation(fields: [universityId], references: [id], onDelete: Cascade)
+}
+
+// ! Company Trainer Profile Model
+
+model CompanyTrainerProfile {
+  userId         Int     @id
+  companyId      Int
+  position       String?
+  specialization String?
+
+  company Company? @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ! Training Opportunity Model
+
+model TrainingOpportunity {
+  id             Int          @id @default(autoincrement())
+  companyId      Int
+  title          String
+  description    String
+  requiredSkills String?
+  duration       String?
+  totalSeats     Int
+  location       String?
+  meetingLink    String?
+  isActive       Boolean      @default(true)
+  type           TrainingType @default(ONSITE)
+
+  // internship  Internship? @relation("OppToInternship")
+  internships Internship[]
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
+
+// ! Internship Model
+
+model Internship {
+  id            Int              @id @default(autoincrement())
+  opportunityId Int
+  companyId     Int
+  universityId  Int
+  trainerId     Int?
+  supervisorId  Int?
+  status        InternshipStatus @default(ACTIVE)
+
+  students    InternshipStudent[]
+  attendance  Attendance[]
+  evaluations Evaluation[]
+  tasks       Task[]
+
+  company     Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  university  University          @relation(fields: [universityId], references: [id], onDelete: Cascade)
+  opportunity TrainingOpportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  trainer     User?               @relation("TrainerInternship", fields: [trainerId], references: [id], onDelete: SetNull)
+  supervisor  User?               @relation("SupervisorInternship", fields: [supervisorId], references: [id], onDelete: SetNull)
+  // opportunityId String @unique
+  // opportunity   TrainingOpportunity @relation("OppToInternship", fields: [opportunityId], references: [id])
+}
+
+// ! Internship Student Model
+
+model InternshipStudent {
+  id           Int @id @default(autoincrement())
+  internshipId Int
+  studentId    Int
+
+  internship Internship     @relation(fields: [internshipId], references: [id], onDelete: Cascade)
+  student    StudentProfile @relation(fields: [studentId], references: [userId], onDelete: Cascade)
+
+  @@unique([internshipId, studentId])
+}
+
+// ! Task Model
+
+model Task {
+  id           Int        @id @default(autoincrement())
+  internshipId Int
+  title        String
+  description  String?
+  deadline     DateTime?
+  status       TaskStatus @default(TODO)
+
+  submissions TaskSubmission[]
+  internship  Internship       @relation(fields: [internshipId], references: [id], onDelete: Cascade)
+}
+
+// ! Task Submission Model
+
+model TaskSubmission {
+  id          Int      @id @default(autoincrement())
+  taskId      Int
+  studentId   Int
+  fileUrl     String?
+  score       Float?
+  feedback    String?
+  submittedAt DateTime @default(now())
+
+  aiEvaluations AIEvaluation[]
+
+  student StudentProfile @relation(fields: [studentId], references: [userId], onDelete: Cascade)
+  task    Task           @relation(fields: [taskId], references: [id], onDelete: Cascade)
+}
+
+// ! Attendance Model
+
+model Attendance {
+  id           Int              @id @default(autoincrement())
+  internshipId Int
+  studentId    Int
+  date         DateTime
+  status       AttendanceStatus
+
+  internship Internship     @relation(fields: [internshipId], references: [id], onDelete: Cascade)
+  student    StudentProfile @relation(fields: [studentId], references: [userId], onDelete: Cascade)
+}
+
+// ! Evaluation Model
+
+model Evaluation {
+  id           Int            @id @default(autoincrement())
+  internshipId Int
+  studentId    Int
+  evaluatorId  Int
+  type         EvaluationType
+  score        Float?
+  feedback     String?
+  createdAt    DateTime       @default(now())
+
+  evaluator  User           @relation("UserEvaluations", fields: [evaluatorId], references: [id], onDelete: Cascade)
+  internship Internship     @relation(fields: [internshipId], references: [id], onDelete: Cascade)
+  student    StudentProfile @relation(fields: [studentId], references: [userId], onDelete: Cascade)
+}
+
+// ! AI Evaluation Model
+
+model AIEvaluation {
+  id               Int      @id @default(autoincrement())
+  taskSubmissionId Int
+  score            Float?
+  analysis         String?
+  recommendations  String?
+  createdAt        DateTime @default(now())
+
+  taskSubmission TaskSubmission @relation(fields: [taskSubmissionId], references: [id], onDelete: Cascade)
+}
+
+// ! Message Model
+
+model Message {
+  id         Int      @id @default(autoincrement())
+  senderId   Int
+  receiverId Int
+  content    String
+  createdAt  DateTime @default(now())
+
+  sender   User @relation("sent", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User @relation("recv", fields: [receiverId], references: [id], onDelete: Cascade)
+}
+
+// ! Notification Model
+
+model Notification {
+  id        Int              @id @default(autoincrement())
+  userId    Int
+  title     String
+  body      String
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+  type      NotificationType
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
