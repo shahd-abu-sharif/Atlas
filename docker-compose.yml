@@ -1,18 +1,19 @@
-
-
 services:
   db:
-    image: postgres:16
-    container_name: atlas_postgres
+    image: postgres:17
+    container_name: tadreeby-postgres
     restart: always
+
     environment:
-      POSTGRES_USER: atlas_user
-      POSTGRES_PASSWORD: 123456789
-      POSTGRES_DB: atlas_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: tadreeby
+
     ports:
       - "5432:5432"
+
     volumes:
-      - atlas_pgdata:/var/lib/postgresql/data
+      - tadreeby_pgdata:/var/lib/postgresql/data
 
 volumes:
-  atlas_pgdata:
+  tadreeby_pgdata:
