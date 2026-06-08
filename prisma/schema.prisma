@@ -23,6 +23,12 @@ enum UserRole {
   STUDENT
 }
 
+enum StudentApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 enum ApplicationStatus {
   PENDING
   ACCEPTED
@@ -73,7 +79,9 @@ model User {
   id                Int                          @id @default(autoincrement())
   email             String                       @unique
   password          String
-  fullName          String
+  // fullName          String
+  firstName         String
+  lastName          String
   phone             String?
   profileImage      String?
   role              UserRole
@@ -121,6 +129,7 @@ model University {
   id          Int     @id @default(autoincrement())
   name        String
   email       String?
+  shortCode   String  @unique
   phone       String?
   location    String?
   description String?
@@ -138,6 +147,7 @@ model Company {
   id          Int     @id @default(autoincrement())
   name        String
   email       String?
+  shortCode   String  @unique
   phone       String?
   location    String?
   description String?
@@ -152,14 +162,15 @@ model Company {
 // ! Student Profile Model
 
 model StudentProfile {
-  userId               Int       @id
-  universityId         Int?
+  userId               Int                   @id
+  universityId         Int
   major                String?
   academicYear         Int?
   gpa                  Float?
   cvUrl                String?
-  verificationDocument String?
-  approvalStatus       String?
+  verificationDocument String
+  // approvalStatus       String?
+  approvalStatus       StudentApprovalStatus @default(PENDING)
   approvedAt           DateTime?
 
   internships     InternshipStudent[]
