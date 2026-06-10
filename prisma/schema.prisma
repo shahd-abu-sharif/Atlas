@@ -82,6 +82,7 @@ model User {
   // fullName          String
   firstName         String
   lastName          String
+  personalID        Int                          @unique
   phone             String?
   profileImage      String?
   role              UserRole
@@ -104,6 +105,11 @@ model User {
 
   university University? @relation(fields: [universityId], references: [id], onDelete: SetNull)
   company    Company?    @relation(fields: [companyId], references: [id], onDelete: SetNull)
+
+  @@index([isActive])
+  // to enable role filter
+  @@index([role])
+  @@index([role, isActive])
 }
 
 // ! Refresh Token Model
@@ -164,6 +170,7 @@ model Company {
 model StudentProfile {
   userId               Int                   @id
   universityId         Int
+  studentNumber        Int
   major                String?
   academicYear         Int?
   gpa                  Float?
@@ -178,8 +185,16 @@ model StudentProfile {
   evaluations     Evaluation[]
   taskSubmissions TaskSubmission[]
 
-  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  university University? @relation(fields: [universityId], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  university University @relation(fields: [universityId], references: [id], onDelete: Cascade)
+
+  @@unique([studentNumber, universityId])
+  @@index([studentNumber])
+  // approval filtering
+  @@index([approvalStatus])
+  // university-based queries
+  @@index([universityId])
+  @@index([universityId, approvalStatus])
 }
 
 // ! University Supervisor Profile Model
@@ -249,6 +264,11 @@ model Internship {
   supervisor  User?               @relation("SupervisorInternship", fields: [supervisorId], references: [id], onDelete: SetNull)
   // opportunityId String @unique
   // opportunity   TrainingOpportunity @relation("OppToInternship", fields: [opportunityId], references: [id])
+
+  @@index([companyId])
+  @@index([universityId])
+  @@index([status])
+  @@index([universityId, status])
 }
 
 // ! Internship Student Model
@@ -262,6 +282,8 @@ model InternshipStudent {
   student    StudentProfile @relation(fields: [studentId], references: [userId], onDelete: Cascade)
 
   @@unique([internshipId, studentId])
+  @@index([studentId])
+  @@index([internshipId])
 }
 
 // ! Task Model
@@ -276,6 +298,9 @@ model Task {
 
   submissions TaskSubmission[]
   internship  Internship       @relation(fields: [internshipId], references: [id], onDelete: Cascade)
+
+  @@index([internshipId])
+  @@index([status])
 }
 
 // ! Task Submission Model
@@ -293,6 +318,10 @@ model TaskSubmission {
 
   student StudentProfile @relation(fields: [studentId], references: [userId], onDelete: Cascade)
   task    Task           @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([taskId])
+  @@index([studentId])
+  @@index([taskId, studentId])
 }
 
 // ! Attendance Model
@@ -306,6 +335,10 @@ model Attendance {
 
   internship Internship     @relation(fields: [internshipId], references: [id], onDelete: Cascade)
   student    StudentProfile @relation(fields: [studentId], references: [userId], onDelete: Cascade)
+
+  @@index([internshipId])
+  @@index([studentId])
+  @@index([internshipId, date])
 }
 
 // ! Evaluation Model
@@ -323,6 +356,10 @@ model Evaluation {
   evaluator  User           @relation("UserEvaluations", fields: [evaluatorId], references: [id], onDelete: Cascade)
   internship Internship     @relation(fields: [internshipId], references: [id], onDelete: Cascade)
   student    StudentProfile @relation(fields: [studentId], references: [userId], onDelete: Cascade)
+
+  @@index([studentId])
+  @@index([internshipId])
+  @@index([evaluatorId])
 }
 
 // ! AI Evaluation Model
@@ -349,6 +386,10 @@ model Message {
 
   sender   User @relation("sent", fields: [senderId], references: [id], onDelete: Cascade)
   receiver User @relation("recv", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@index([senderId])
+  @@index([receiverId])
+  @@index([senderId, receiverId])
 }
 
 // ! Notification Model
@@ -363,4 +404,7 @@ model Notification {
   type      NotificationType
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isRead])
 }

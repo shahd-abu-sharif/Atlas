@@ -1,6 +1,7 @@
 import "dotenv/config";
 
 import { PrismaClient, UserRole } from "@prisma/client";
+import * as argon2 from "argon2";
 import { PrismaPg } from "@prisma/adapter-pg";
 
 const adapter = new PrismaPg({
@@ -10,6 +11,16 @@ const adapter = new PrismaPg({
 const prisma = new PrismaClient({
     adapter,
 });
+
+// -------------------------------------
+// PERSONAL ID GENERATOR
+// -------------------------------------
+
+let personalIdCounter = 1000000000;
+
+function generatePersonalId() {
+    return personalIdCounter++;
+}
 
 // -------------------------------------
 // DATA
@@ -26,23 +37,14 @@ const companies = [
     { name: "Future Labs", shortCode: "FUT" },
 ];
 
-const majors = [
-    "Backend Developer",
-    "Frontend Developer",
-    "UX/UI Designer",
-    "Network Engineer",
-];
-
 // -------------------------------------
 // HELPERS
 // -------------------------------------
 
 function buildEmail(first: string, last: string, code: string) {
-    return `${first
+    return `${first.toLowerCase().replace(/\s+/g, "")}.${last
         .toLowerCase()
-        .replace(/\s+/g, "")}.${last
-            .toLowerCase()
-            .replace(/\s+/g, "")}.${code.toLowerCase()}@tadreeby.com`;
+        .replace(/\s+/g, "")}.${code.toLowerCase()}@tadreeby.com`;
 }
 
 // -------------------------------------
@@ -51,6 +53,8 @@ function buildEmail(first: string, last: string, code: string) {
 
 async function main() {
     console.log("🌱 Seeding started...");
+
+    const defaultHashed = await argon2.hash("123456");
 
     // -------------------------------------
     // UNIVERSITIES
@@ -96,16 +100,17 @@ async function main() {
 
     await prisma.user.create({
         data: {
-            firstName: "Omar",
-            lastName: "Hassan",
-            email: buildEmail("omar", "hassan", "sys"),
-            password: "123456",
+            firstName: "Shahd",
+            lastName: "sharif",
+            email: buildEmail("shahd", "sharif", "admin"),
+            password: defaultHashed,
             role: UserRole.SUPER_ADMIN,
+            personalID: generatePersonalId(),
         },
     });
 
     // -------------------------------------
-    // UNIVERSITY ADMINS (real names)
+    // UNIVERSITY ADMINS
     // -------------------------------------
 
     const uniAdmins = [
@@ -122,22 +127,17 @@ async function main() {
             data: {
                 firstName: admin.first,
                 lastName: admin.last,
-
-                email: buildEmail(
-                    admin.first,
-                    admin.last,
-                    uni.shortCode
-                ),
-
-                password: "123456",
+                email: buildEmail(admin.first, admin.last, uni.shortCode),
+                password: defaultHashed,
                 role: UserRole.UNIVERSITY_ADMIN,
                 universityId: uni.id,
+                personalID: generatePersonalId(),
             },
         });
     }
 
     // -------------------------------------
-    // UNIVERSITY SUPERVISORS (REALISTIC)
+    // UNIVERSITY SUPERVISORS
     // -------------------------------------
 
     const supervisors = [
@@ -154,12 +154,11 @@ async function main() {
             data: {
                 firstName: s.first,
                 lastName: s.last,
-
                 email: buildEmail(s.first, s.last, uni.shortCode),
-
-                password: "123456",
+                password: defaultHashed,
                 role: UserRole.UNIVERSITY_SUPERVISOR,
                 universityId: uni.id,
+                personalID: generatePersonalId(),
             },
         });
 
@@ -173,7 +172,7 @@ async function main() {
     }
 
     // -------------------------------------
-    // COMPANY ADMINS (real names)
+    // COMPANY ADMINS
     // -------------------------------------
 
     const companyAdmins = [
@@ -189,22 +188,17 @@ async function main() {
             data: {
                 firstName: admin.first,
                 lastName: admin.last,
-
-                email: buildEmail(
-                    admin.first,
-                    admin.last,
-                    comp.shortCode
-                ),
-
-                password: "123456",
+                email: buildEmail(admin.first, admin.last, comp.shortCode),
+                password: defaultHashed,
                 role: UserRole.COMPANY_ADMIN,
                 companyId: comp.id,
+                personalID: generatePersonalId(),
             },
         });
     }
 
     // -------------------------------------
-    // COMPANY TRAINERS (REALISTIC)
+    // COMPANY TRAINERS
     // -------------------------------------
 
     const trainers = [
@@ -220,12 +214,11 @@ async function main() {
             data: {
                 firstName: t.first,
                 lastName: t.last,
-
                 email: buildEmail(t.first, t.last, comp.shortCode),
-
-                password: "123456",
+                password: defaultHashed,
                 role: UserRole.COMPANY_TRAINER,
                 companyId: comp.id,
+                personalID: generatePersonalId(),
             },
         });
 
@@ -257,40 +250,42 @@ async function main() {
         "UX/UI Designer",
         "Network Engineer",
     ];
+
     for (let i = 0; i < 10; i++) {
         const uni = createdUniversities[i % createdUniversities.length];
         const s = studentNames[i % studentNames.length];
         const major = majors[i % majors.length];
 
-        const email = `${s.first
+        const email = `${s.first.toLowerCase().replace(/\s+/g, "")}.${s.last
             .toLowerCase()
-            .replace(/\s+/g, "")}.${s.last
-                .toLowerCase()
-                .replace(/\s+/g, "")}${i}@test.com`;
+            .replace(/\s+/g, "")}${i}@test.com`;
 
         await prisma.user.create({
             data: {
                 firstName: s.first,
                 lastName: s.last,
-
                 email,
-                password: "123456",
+                password: defaultHashed,
                 role: UserRole.STUDENT,
                 universityId: uni.id,
+                personalID: generatePersonalId(),
 
                 studentProfile: {
                     create: {
                         universityId: uni.id,
+                        studentNumber: 20260000 + i, 
                         major,
                         academicYear: 3,
                         gpa: 3.0 + (i % 5) * 0.2,
                         approvalStatus: "APPROVED",
-                        verificationDocument: "N/A",
+                        approvedAt: new Date(),
+                        verificationDocument: "seed-file.pdf",
                     },
                 },
             },
         });
     }
+
     console.log("✅ Seeding completed successfully");
 }
 
