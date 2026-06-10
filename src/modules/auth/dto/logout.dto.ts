@@ -8,3 +8,13 @@ export class LogoutDto {
     @IsString()
     refreshToken: string;
 }
+
+export class LogoutResponseDto {
+    @ApiProperty({ example: true })
+    success!: boolean;
+
+    @IsString()
+    message: string;
+}
+    
+
