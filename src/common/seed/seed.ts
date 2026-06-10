@@ -54,7 +54,7 @@ function buildEmail(first: string, last: string, code: string) {
 async function main() {
     console.log("🌱 Seeding started...");
 
-    const defaultHashed = await argon2.hash("123456");
+    const defaultHashed = await argon2.hash("S3cure@Tadreeby2026");
 
     // -------------------------------------
     // UNIVERSITIES
